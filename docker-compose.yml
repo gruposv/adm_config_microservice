@@ -1,0 +1,33 @@
+version: '3.9'
+
+services:
+  microservice_adm_config:
+    build:
+      context: ./
+    image: microservice_adm_config:latest
+    container_name: microservice_adm_config
+    ports:
+      - "8088:8080"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/adm_config_database
+      - SPRING_DATASOURCE_USERNAME=${DB_USER}
+      - SPRING_DATASOURCE_PASSWORD=${DB_ROOT_PASSWORD}
+    depends_on:
+      - mysql
+    restart: always
+    command: ["java", "-jar", "app.jar"]
+
+  mysql:
+    image: mysql:8.1
+    container_name: mysql_cont
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MYSQL_DATABASE: adm_config_database
+      MYSQL_USER: ${DB_USER}
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+volumes:
+  mysql_data:
