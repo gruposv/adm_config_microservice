@@ -1,6 +1,18 @@
 version: '3.9'
 
 services:
+  mysql:
+    image: mysql:8.1
+    container_name: mysql_cont
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MYSQL_DATABASE: adm_config_database
+      MYSQL_USER: ${DB_USER}
+    volumes:
+      - mysql_data:/var/lib/mysql
+
   microservice_adm_config:
     build:
       context: ./
@@ -16,18 +28,6 @@ services:
       - mysql
     restart: always
     command: ["java", "-jar", "app.jar"]
-
-  mysql:
-    image: mysql:8.1
-    container_name: mysql_cont
-    ports:
-      - "3306:3306"
-    environment:
-      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
-      MYSQL_DATABASE: adm_config_database
-      MYSQL_USER: ${DB_USER}
-    volumes:
-      - mysql_data:/var/lib/mysql
 
 volumes:
   mysql_data:
